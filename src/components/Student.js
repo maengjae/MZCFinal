@@ -14,7 +14,7 @@ export default function Student() {
         const student={name,address}
         console.log(student)
         // fetch(`http://${process.env.REACT_APP_DOMAIN}/student/add`,{
-        fetch(`http://${DOMAIN}/student/add`,{
+        fetch(`https://${DOMAIN}/student/add`,{
             method: "POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify(student)
@@ -26,7 +26,7 @@ export default function Student() {
 
     const fetchStudents = () => {
       // fetch(`http://${process.env.REACT_APP_DOMAIN}/student/getAll`)
-      fetch(`http://${DOMAIN}/student/getAll`)
+      fetch(`https://${DOMAIN}/student/getAll`)
       .then(res=>res.json())
       .then((result)=>{
         setStudents(result);
