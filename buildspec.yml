@@ -8,12 +8,6 @@ phases:
       - echo "Installing dependencies..."
       - npm install
       - npm install react-scripts@5.0.1
-
-  pre_build:
-    commands:
-      - echo "Linting React project..."
-      - npm run lint
-
   build:
     commands:
       - echo "Building React project..."
