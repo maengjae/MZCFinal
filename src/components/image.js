@@ -9,7 +9,7 @@ const config = {
     secretAccessKey: process.env.Secret_access_key,
 }
 
-export class image extends Component {
+export class Image extends Component {
     constructor(){
         super();
     }
