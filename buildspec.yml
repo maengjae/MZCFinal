@@ -9,6 +9,13 @@ phases:
       - npm install
       - npm install react-scripts@5.0.1
       - npm install --save react-s3
+    
+  pre_build:
+    commands:
+      - Access_key_ID=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
+      - Secret_access_key=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
+      - export Access_key_ID
+      - export Secret_access_key
   build:
     commands:
       - echo "Building React project..."
