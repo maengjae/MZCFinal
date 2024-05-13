@@ -9,7 +9,7 @@ const config = {
     secretAccessKey: process.env.Secret_access_key,
 }
 
-const ImageUploader = () => {
+const Image = () => {
     const [selectedFile, setSelectedFile] = useState(null);
 
     const upload = () => {
@@ -39,4 +39,4 @@ const ImageUploader = () => {
     );
 }
 
-export default ImageUploader;
+export default Image;
