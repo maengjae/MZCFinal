@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import React, { Component } from 'react';
 import S3FileUpload from 'react-s3';
  
@@ -9,7 +10,7 @@ const config = {
     secretAccessKey: process.env.Secret_access_key,
 }
 
-export class Image extends Component {
+class Image extends Component {
     constructor(){
         super();
     }
@@ -25,12 +26,14 @@ export class Image extends Component {
     }
     render(){
         return (
-            <div>
+            <Box>
                 <h3>
                     aws s3 upload
                 </h3>
                 <input type="file" onChange={this.upload}/> 
-            </div>
+            </Box>
         )
     }
 }
+
+export default Image
