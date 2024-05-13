@@ -21,8 +21,6 @@ phases:
   build:
     commands:
       - echo "Building React project..."
-      - echo $Access_key_ID
-      - echo $Secret_access_key
       - npm run build
 
   post_build:

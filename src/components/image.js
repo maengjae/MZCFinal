@@ -32,11 +32,11 @@ export default function Image() {
     };
 
     return (
-        <div>
+        <Box>
             <h3>aws s3 upload</h3>
-            <input type="file" style={{ display: 'none' }} onChange={handleFileChange} ref={(fileInput) => (this.fileInput = fileInput)} />
+            <input type="file" style={{ display: 'fileimage' }} onChange={handleFileChange} ref={(fileInput) => (this.fileInput = fileInput)} />
             <button onClick={() => this.fileInput.click()}>Select File</button>
             <button onClick={upload}>Upload</button>
-        </div>
+        </Box>
     );
 }
