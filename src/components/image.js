@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import React, { Component } from 'react';
 import S3FileUpload from 'react-s3';
  
@@ -22,9 +23,9 @@ export default function Image() {
     }
 
     return (
-        <div>
+        <Box>
             <h3>aws s3 upload</h3>
             <input type="file" onChange={upload}/>
-        </div>
+        </Box>
     );
 }
