@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import S3FileUpload from 'react-s3';
  
 const config = {
@@ -11,21 +11,32 @@ const config = {
 }
 
 export default function Image() {
-    const upload = (e) => {
-        console.log(e.target.files[0]);
-        S3FileUpload.upload(e.target.files[0], config)
-        .then((data) => {
-            console.log(data.location);
-        })
-        .catch((err) => {
-            alert(err);
-        })
-    }
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const upload = () => {
+        if (selectedFile) {
+            S3FileUpload.upload(selectedFile, config)
+                .then((data) => {
+                    console.log(data.location);
+                })
+                .catch((err) => {
+                    alert(err);
+                });
+        } else {
+            alert('Please select a file first.');
+        }
+    };
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
 
     return (
-        <Box>
+        <div>
             <h3>aws s3 upload</h3>
-            <input type="file" onChange={upload}/>
-        </Box>
+            <input type="file" style={{ display: 'none' }} onChange={handleFileChange} ref={(fileInput) => (this.fileInput = fileInput)} />
+            <button onClick={() => this.fileInput.click()}>Select File</button>
+            <button onClick={upload}>Upload</button>
+        </div>
     );
 }
