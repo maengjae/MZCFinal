@@ -13,7 +13,7 @@ phases:
   pre_build:
     commands:
       - secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
-      - Access_key_ID=$(echo "secret" | jq -r '.Access_key_ID')
+      - Access_key_ID=$(echo "$secret" | jq -r '.Access_key_ID')
       - Secret_access_key=$(echo "$secret" | jq -r '.Secret_access_key')
       - export Access_key_ID
       - export Secret_access_key
