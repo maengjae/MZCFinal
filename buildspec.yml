@@ -4,8 +4,8 @@ phases:
     commands:
       - echo Logging in to Amazon ECR....
       - aws --version
-      # - docker-username=$(aws secretsmanager get-secret-value --secret-id app/docker --query 'SecretString' --output text | jq -r .docker-username)
-      # - docker-password=$(aws secretsmanager get-secret-value --secret-id app/docker --query 'SecretString' --output text | jq -r .docker-password)
+      - docker-username=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query 'SecretString' --output text | jq -r .docker-username)
+      - docker-password=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query 'SecretString' --output text | jq -r .docker-password)
       - echo $docker-password | docker login -u $docker-username --password-stdin
       - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382777416.dkr.ecr.us-east-2.amazonaws.com
       - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
