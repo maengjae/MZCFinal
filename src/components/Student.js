@@ -32,8 +32,8 @@ export default function Student() {
     };
 
     const addStudent = (student) => {
-      // fetch(`http://${process.env.App_domain}/student/add`,{
-      fetch(`https://${DOMAIN}/student/add`,{
+      fetch(`http://${process.env.App_domain}/student/add`,{
+      // fetch(`https://${DOMAIN}/student/add`,{
           method: "POST",
           headers:{"Content-Type":"application/json"},
           body:JSON.stringify(student)
@@ -48,8 +48,8 @@ export default function Student() {
     };
 
     const fetchStudents = () => {
-      // fetch(`http://${process.env.REACT_App_domain}/student/getAll`)
-      fetch(`https://${DOMAIN}/student/getAll`)
+      fetch(`http://${process.env.REACT_App_domain}/student/getAll`)
+      // fetch(`https://${DOMAIN}/student/getAll`)
       .then(res=>res.json())
       .then((result)=>{
         setStudents(result);
