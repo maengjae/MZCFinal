@@ -1,20 +1,15 @@
 import React, { useState } from 'react';
 import S3FileUpload from 'react-s3';
+import { config } from '../set';
+window.Buffer = window.Buffer || require("buffer").Buffer;
 
-const config = {
-    bucketName: 'mjy-static-deploy',
-    dirName: 'photos', /* optional */
-    region: 'us-east-2',
-    accessKeyId: process.env.Access_key_ID,
-    secretAccessKey: process.env.Secret_access_key,
-}
 
-const Image = () => {
+export default function Image() {
     const [selectedFile, setSelectedFile] = useState(null);
 
     const upload = () => {
         if (selectedFile) {
-            S3FileUpload.upload(selectedFile, config)
+            S3FileUpload.uploadFile(selectedFile, config)
                 .then((data) => {
                     console.log(data.location);
                 })
@@ -38,5 +33,3 @@ const Image = () => {
         </div>
     );
 }
-
-export default Image;

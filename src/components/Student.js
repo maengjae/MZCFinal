@@ -2,30 +2,53 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { DOMAIN } from '../set';
+import { DOMAIN ,config} from '../set';
+import S3FileUpload from 'react-s3/lib/ReactS3';
 
 export default function Student() {
     const[name,setName]=React.useState('')
     const[address,setAddress]=React.useState('')
+    const [imageFile, setImageFile] = React.useState(null);
     const[students,setStudents]=React.useState([])
 
     const handleClick=(e)=>{
-        e.preventDefault()
-        const student={name,address}
-        console.log(student)
-        // fetch(`http://${process.env.REACT_APP_DOMAIN}/student/add`,{
-        fetch(`https://${DOMAIN}/student/add`,{
-            method: "POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify(student)
-        }).then(()=>{
-            console.log("New Student Added")
-            fetchStudents();
+      e.preventDefault()
+      const student={name,address}
+      console.log(student)
+
+      if(imageFile) {
+        S3FileUpload.uploadFile(imageFile, config)
+        .then((data) => {
+          console.log("Image uploaded:", data.location);
+          student.imageURL = data.location;
+          addStudent(student);
         })
-    }
+        .catch((err) => {
+          console.error('Error uploading image:', err);
+        });
+      } else {
+        addStudent(student);
+      }
+    };
+
+    const addStudent = (student) => {
+      // fetch(`http://${process.env.App_domain}/student/add`,{
+      fetch(`https://${DOMAIN}/student/add`,{
+          method: "POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify(student)
+      })
+      .then(()=>{
+        console.log("New Student Added")
+        fetchStudents();
+      })
+      .catch(error => {
+        console.error('Error adding student:', error);
+      });
+    };
 
     const fetchStudents = () => {
-      // fetch(`http://${process.env.REACT_APP_DOMAIN}/student/getAll`)
+      // fetch(`http://${process.env.REACT_App_domain}/student/getAll`)
       fetch(`https://${DOMAIN}/student/getAll`)
       .then(res=>res.json())
       .then((result)=>{
@@ -34,6 +57,10 @@ export default function Student() {
       .catch(error => {
         console.error('Error fetching students:', error);
       });
+    };
+
+    const handleFileChange = (e) => {
+      setImageFile(e.target.files[0]);
     }
 
     React.useEffect(()=>{
@@ -58,6 +85,7 @@ export default function Student() {
       value={address}
       onChange={(e)=>setAddress(e.target.value)}
       />
+      <input type='file' onChange={handleFileChange} />
       <Button variant="contained" onClick={handleClick}>Submit</Button>
       
       <h1> Students</h1>
@@ -67,6 +95,7 @@ export default function Student() {
         Id:{student.id}<br/>
         Name:{student.name}<br/>
         Address:{student.address}
+        {student.imageURL && <img src={student.imageURL} alt="Student"/>}
         </h5>
       ))}
     </Box>
