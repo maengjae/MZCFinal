@@ -1,7 +1,3 @@
-export const DOMAIN = "back.jaejae.store" 
-// export const DOMAIN = "localhost:34000"
-
-
 export const config = {
     bucketName: 'mjy-static-deploy',
     dirName: 'images', /* optional */
