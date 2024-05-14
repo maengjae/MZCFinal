@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { DOMAIN ,config} from '../set';
+import { config} from '../set';
 import S3FileUpload from 'react-s3/lib/ReactS3';
 
 export default function Student() {
@@ -13,7 +13,7 @@ export default function Student() {
 
     const handleClick=(e)=>{
       e.preventDefault()
-      const student={name,address}
+      const student={name,address,image}
       console.log(student)
 
       if(imageFile) {
@@ -77,11 +77,20 @@ export default function Student() {
       autoComplete="off"
     >
       <h1 style={{color:"blue"}}><u>Add Student</u></h1>
-      <TextField id="standard-basic" label="Student Name" variant="standard" fullWidth 
+      <TextField 
+      id="standard-basic" 
+      label="Student Name" 
+      variant="standard" 
+      fullWidth 
       value={name}
       onChange={(e)=>setName(e.target.value)}
+      required
       />
-      <TextField id="standard-basic" label="Student Address" variant="standard" fullWidth 
+      <TextField 
+      id="standard-basic" 
+      label="Student Address" 
+      variant="standard" 
+      fullWidth 
       value={address}
       onChange={(e)=>setAddress(e.target.value)}
       />
@@ -94,8 +103,8 @@ export default function Student() {
         <h5 key={student.id}>
         Id:{student.id}<br/>
         Name:{student.name}<br/>
-        Address:{student.address}
-        {student.imageURL && <img src={student.imageURL} alt="Student"/>}
+        Address:{student.address}<br/>
+        {student.imageURL && <img src={student.image} alt="Student"/>}
         </h5>
       ))}
     </Box>

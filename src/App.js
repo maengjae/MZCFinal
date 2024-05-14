@@ -8,7 +8,6 @@ function App() {
     <div className="App">
     <Appbar/>
     <Student/>
-    <Image/>
     </div>
   );
 }
