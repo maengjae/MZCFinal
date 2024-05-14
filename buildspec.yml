@@ -33,4 +33,4 @@ phases:
 artifacts:
   files:
     - imagedefinitions.json
-    - target/springboot-aws-deploy.jar
+    - target/spring-test-0.0.1-SNAPSHOT.jar
