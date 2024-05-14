@@ -1,0 +1,6 @@
+FROM mysql
+
+ENV MYSQL_ROOT_PASSWORD=aodwodud
+ENV MYSQL_DATABASE=fullstack
+ENV MYSQL_USER=admin
+ENV MYSQL_PASSWORD=adminadmin
