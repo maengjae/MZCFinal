@@ -15,7 +15,7 @@ phases:
       - secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
       - Access_key_ID=$(echo "$secret" | jq -r '.Access_key_ID')
       - Secret_access_key=$(echo "$secret" | jq -r '.Secret_access_key')
-      - App_domain=$(aws elbv2 describe-load-balancers --names YourALBName --query "LoadBalancers[0].DNSName" --output text)
+      - App_domain=$(aws elbv2 describe-load-balancers --names mjy-app-alb --query "LoadBalancers[0].DNSName" --output text)
       - export Access_key_ID
       - export Secret_access_key
       - export App_domain
