@@ -21,7 +21,7 @@ export default function Appbar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            MJY online cosmetic shop
+            MJY online cosmetic shop!!!
           </Typography>
         </Toolbar>
       </AppBar>
