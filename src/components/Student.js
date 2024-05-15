@@ -8,7 +8,7 @@ import S3FileUpload from 'react-s3/lib/ReactS3';
 export default function Student() {
     const[name,setName]=React.useState('')
     const[address,setAddress]=React.useState('')
-    const [imageFile, setImageFile] = React.useState(null);
+    const [imageURL, setImageURL] = React.useState(null);
     const[students,setStudents]=React.useState([])
 
     const handleClick=(e)=>{
@@ -16,8 +16,8 @@ export default function Student() {
       const student={name,address,imageURL}
       console.log(student)
 
-      if(imageFile) {
-        S3FileUpload.uploadFile(imageFile, config)
+      if(imageURL) {
+        S3FileUpload.uploadFile(imageURL, config)
         .then((data) => {
           console.log("Image uploaded:", data.location);
           student.imageURL = data.location;
@@ -60,7 +60,7 @@ export default function Student() {
     };
 
     const handleFileChange = (e) => {
-      setImageFile(e.target.files[0]);
+      setImageURL(e.target.files[0]);
     }
 
     React.useEffect(()=>{
