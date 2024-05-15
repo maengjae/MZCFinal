@@ -13,7 +13,7 @@ export default function Student() {
 
     const handleClick=(e)=>{
       e.preventDefault()
-      const student={name,address,image}
+      const student={name,address,imageURL}
       console.log(student)
 
       if(imageFile) {
@@ -104,7 +104,7 @@ export default function Student() {
         Id:{student.id}<br/>
         Name:{student.name}<br/>
         Address:{student.address}<br/>
-        {student.imageURL && <img src={student.image} alt="Student"/>}
+        {student.imageURL && <img src={student.imageURL} alt="Student"/>}
         </h5>
       ))}
     </Box>
