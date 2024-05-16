@@ -10,11 +10,11 @@ phases:
       - echo $docker_password | docker login -u $docker_username --password-stdin
       - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382777416.dkr.ecr.us-east-2.amazonaws.com
       - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
-      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      - IMAGE_TAG=app-deploy
 
   build:
     commands:
-      - echo Build started on `date`
+      - echo Build started on `date`docker
       - echo building the Jar file
       - mvn clean package -DskipTests
       - echo Building the Docker image...
