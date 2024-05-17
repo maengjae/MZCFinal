@@ -1,11 +1,24 @@
 version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "us-east-2"
+    REPOSITORY_URI: "lygerin14/test"
+    IMAGE_TAG: "app-deploy"
+    ECS_TASK_DEFINITION: "arn:aws:ecs:us-east-2:992382777416:task-definition/app-task-family:51"
+
+
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR....
-      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382777416.dkr.ecr.us-east-2.amazonaws.com
-      - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
-      - IMAGE_TAG=app-deploy
+      # - echo Logging in to Amazon ECR....
+      # - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382777416.dkr.ecr.us-east-2.amazonaws.com
+      # - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
+      - echo Logging into docker
+      - secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query SecretString --output text)
+      - docker_username=$(echo "$secret" | jq -r '.docker-username')
+      - docker_password=$(echo "$secret" | jq -r '.docker-password')
+      - echo $docker_password | docker login -u $docker_username --password-stdin
 
   build:
     commands:
@@ -14,14 +27,27 @@ phases:
       - mvn clean package -DskipTests
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+
   post_build:
     commands:
       - echo Build completed on `date`
       - echo pushing to repo
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Writing image definitions file...
-      - printf '[{"name":"%s","imageUri":"%s"}]' "mjy-app" $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - cat imagedefinitions.json
-artifacts:
-  files:
-    - imagedefinitions.json
+
+      # - echo Writing image definitions file...
+      # - printf '[{"name":"%s","imageUri":"%s"}]' "mjy-app" $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      # - cat imagedefinitions.json
+      - echo Getting ECS Cluster ARN...
+      - ECS_CLUSTER_ARN=$(aws ecs list-clusters --region $AWS_REGION --query "clusterArns[0]" --output text)
+      - echo ECS Cluster ARN $ECS_CLUSTER_ARN
+
+      - echo Getting ECS Service ARN...
+      - ECS_SERVICE_ARN=$(aws ecs list-services --cluster $ECS_CLUSTER_ARN --region $AWS_REGION --query "serviceArns[0]" --output text)
+      - echo ECS Service ARN $ECS_SERVICE_ARN
+
+      - echo Extracting ECS Service Name...
+      - ECS_SERVICE_NAME=$(echo $ECS_SERVICE_ARN | awk -F/ '{print $NF}')
+      - echo ECS Service Name $ECS_SERVICE_NAME
+
+      - echo Depoying
+      - aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $ECS_TASK_DEFINITION --force-new-deployment
