@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { config} from '../set';
 import S3FileUpload from 'react-s3/lib/ReactS3';
+window.Buffer = window.Buffer || require("buffer").Buffer;
 
 export default function Student() {
     const[name,setName]=React.useState('')
@@ -32,7 +33,7 @@ export default function Student() {
     };
 
     const addStudent = (student) => {
-      fetch(`http://${process.env.App_domain}/student/add`,{
+      fetch(`https://${process.env.App_domain}/student/add`,{
       // fetch(`https://${DOMAIN}/student/add`,{
           method: "POST",
           headers:{"Content-Type":"application/json"},
@@ -48,7 +49,7 @@ export default function Student() {
     };
 
     const fetchStudents = () => {
-      fetch(`http://${process.env.REACT_App_domain}/student/getAll`)
+      fetch(`https://${process.env.REACT_App_domain}/student/getAll`)
       // fetch(`https://${DOMAIN}/student/getAll`)
       .then(res=>res.json())
       .then((result)=>{
