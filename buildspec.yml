@@ -3,31 +3,24 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR....
-      - aws --version
-      - secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query SecretString --output text)
-      - docker_username=$(echo "$secret" | jq -r '.username')
-      - docker_password=$(echo "$secret" | jq -r '.password')
       - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382777416.dkr.ecr.us-east-2.amazonaws.com
       - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
+      - IMAGE_TAG=app-deploy
 
   build:
     commands:
-      - echo Build started on `date`docker
+      - echo Build started on `date`
       - echo building the Jar file
       - mvn clean package -DskipTests
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:app-deploy .
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
   post_build:
     commands:
       - echo Build completed on `date`
       - echo pushing to repo
-      - docker push $REPOSITORY_URI:app-deploy
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      # Give your container name
-      - DOCKER_CONTAINER_NAME=mjy-app
-      - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:app-deploy > imagedefinitions.json
-      - echo $DOCKER_CONTAINER_NAME
-      - echo printing imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' "mjy-app" $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
 artifacts:
   files:
