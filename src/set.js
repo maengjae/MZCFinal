@@ -4,5 +4,5 @@ export const config = {
     region: 'us-east-2',
     accessKeyId: process.env.REACT_APP_ID,
     secretAccessKey: process.env.REACT_APP_SECRET,
-    s3Url: 'http://mjy-static-deploy.s3.us-east-2.amazonaws.com/'
+    s3Url: 'https://mjy-static-deploy.s3.us-east-2.amazonaws.com/'
 }
