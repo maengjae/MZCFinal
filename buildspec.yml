@@ -5,8 +5,7 @@ env:
     AWS_REGION: "us-east-2"
     REPOSITORY_URI: "lygerin14/test"
     IMAGE_TAG: "app-deploy"
-    ECS_TASK_DEFINITION: "arn:aws:ecs:us-east-2:992382777416:task-definition/app-task-family:51"
-
+    TASK_FAMILY: "app-task-family"
 
 phases:
   pre_build:
@@ -16,8 +15,8 @@ phases:
       # - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
       - echo Logging into docker
       - secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query SecretString --output text)
-      - docker_username=$(echo "$secret" | jq -r '.docker-username')
-      - docker_password=$(echo "$secret" | jq -r '.docker-password')
+      - docker_username=$(echo "$secret" | jq -r '.username')
+      - docker_password=$(echo "$secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
 
   build:
@@ -37,6 +36,11 @@ phases:
       # - echo Writing image definitions file...
       # - printf '[{"name":"%s","imageUri":"%s"}]' "mjy-app" $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       # - cat imagedefinitions.json
+
+      - echo Getting latest ECS Task Definition ARN...
+      - ECS_TASK_DEFINITION_ARN=$(aws ecs list-task-definitions --family-prefix $TASK_FAMILY --status ACTIVE --sort DESC --region $AWS_REGION --query "taskDefinitionArns[0]" --output text)
+      - echo ECS Task Definition ARN $ECS_TASK_DEFINITION_ARN
+
       - echo Getting ECS Cluster ARN...
       - ECS_CLUSTER_ARN=$(aws ecs list-clusters --region $AWS_REGION --query "clusterArns[0]" --output text)
       - echo ECS Cluster ARN $ECS_CLUSTER_ARN
