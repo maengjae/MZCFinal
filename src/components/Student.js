@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { config} from '../set';
-import S3FileUpload from 'react-s3/lib/ReactS3';
+import S3 from 'react-aws-s3';
 window.Buffer = window.Buffer || require("buffer").Buffer;
 
 export default function Student() {
@@ -11,6 +11,7 @@ export default function Student() {
     const[address,setAddress]=React.useState('')
     const [imageURL, setImageURL] = React.useState(null);
     const[students,setStudents]=React.useState([])
+    const ReactS3Client = new S3(config)
 
     const handleClick=(e)=>{
       e.preventDefault()
@@ -18,7 +19,9 @@ export default function Student() {
       console.log(student)
 
       if(imageURL) {
-        S3FileUpload.uploadFile(imageURL, config)
+        const currentDate = new Date().toISOString().replace(/[:.]/g, '-');
+        const fileName = `${name}_${currentDate}`;
+        ReactS3Client.uploadFile(imageURL, fileName)
         .then((data) => {
           console.log("Image uploaded:", data.location);
           student.imageURL = data.location;
