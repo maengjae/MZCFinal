@@ -49,7 +49,7 @@ export default function Student() {
     };
 
     const fetchStudents = () => {
-      fetch(`https://${process.env.REACT_App_domain}/student/getAll`)
+      fetch(`https://${process.env.App_domain}/student/getAll`)
       // fetch(`https://${DOMAIN}/student/getAll`)
       .then(res=>res.json())
       .then((result)=>{
