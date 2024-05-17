@@ -19,6 +19,7 @@ phases:
       - export Access_key_ID
       - export Secret_access_key
       - export App_domain
+      - echo $Access_key_ID $Secret_access_key $App_domain
 
   build:
     commands:
