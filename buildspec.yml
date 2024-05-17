@@ -45,6 +45,10 @@ phases:
       - ECS_CLUSTER_ARN=$(aws ecs list-clusters --region $AWS_REGION --query "clusterArns[0]" --output text)
       - echo ECS Cluster ARN $ECS_CLUSTER_ARN
 
+      - echo Getting ECS Service ARN...
+      - ECS_SERVICE_ARN=$(aws ecs list-services --cluster $ECS_CLUSTER_ARN --region $AWS_REGION --query "serviceArns[0]" --output text)
+      - echo ECS Service ARN $ECS_SERVICE_ARN
+
       - echo Extracting ECS Service Name...
       - ECS_SERVICE_NAME=$(echo $ECS_SERVICE_ARN | awk -F/ '{print $NF}')
       - echo ECS Service Name $ECS_SERVICE_NAME
