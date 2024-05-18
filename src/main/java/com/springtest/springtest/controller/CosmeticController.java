@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springtest.springtest.model.Cosmetic;
-import com.springtest.springtest.service.StudentService;
+import com.springtest.springtest.service.CosmeticService;
 
 @RestController
 @RequestMapping("/cosmetic")
