@@ -2,37 +2,18 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { config} from '../set';
-import S3 from 'react-aws-s3';
-window.Buffer = window.Buffer || require("buffer").Buffer;
 
 export default function Student() {
     const[name,setName]=React.useState('')
     const[address,setAddress]=React.useState('')
     const [imageURL, setImageURL] = React.useState(null);
     const[students,setStudents]=React.useState([])
-    const ReactS3Client = new S3(config)
 
     const handleClick=(e)=>{
       e.preventDefault()
       const student={name,address,imageURL}
       console.log(student)
-
-      if(imageURL) {
-        const currentDate = new Date().toISOString().replace(/[:.]/g, '-');
-        const fileName = `${name}_${currentDate}`;
-        ReactS3Client.uploadFile(imageURL, fileName)
-        .then((data) => {
-          console.log("Image uploaded:", data.location);
-          student.imageURL = data.location;
-          addStudent(student);
-        })
-        .catch((err) => {
-          console.error('Error uploading image:', err);
-        });
-      } else {
-        addStudent(student);
-      }
+      addStudent(student);
     };
 
     const addStudent = (student) => {
@@ -62,10 +43,6 @@ export default function Student() {
         console.error('Error fetching students:', error);
       });
     };
-
-    const handleFileChange = (e) => {
-      setImageURL(e.target.files[0]);
-    }
 
     React.useEffect(()=>{
         fetchStudents();
@@ -98,7 +75,14 @@ export default function Student() {
       value={address}
       onChange={(e)=>setAddress(e.target.value)}
       />
-      <input type='file' onChange={handleFileChange} />
+      <TextField 
+      id="standard-basic" 
+      label="Image URL" 
+      variant="standard" 
+      fullWidth 
+      value={imageURL}
+      onChange={(e)=>setImageURL(e.target.value)}
+      />
       <Button variant="contained" onClick={handleClick}>Submit</Button>
       
       <h1> Students</h1>
@@ -108,7 +92,7 @@ export default function Student() {
         Id:{student.id}<br/>
         Name:{student.name}<br/>
         Address:{student.address}<br/>
-        {student.imageURL && <img src={student.imageURL} alt="Student"/>}
+        {student.imageURL && <img src={student.imageURL} alt="Student" style={{ maxWidth: '200px', maxHeight: '200px' }} />}
         </h5>
       ))}
     </Box>
