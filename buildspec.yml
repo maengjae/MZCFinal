@@ -12,14 +12,14 @@ phases:
     
   pre_build:
     commands:
-      - secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
+      # - secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
       # - REACT_APP_ID=$(echo "$secret" | jq -r '.Access_key_ID')
       # - REACT_APP_SECRET=$(echo "$secret" | jq -r '.Secret_access_key')
       # - REACT_APP_domain=$(aws elbv2 describe-load-balancers --names mjy-app-alb --query "LoadBalancers[0].DNSName" --output text)
-      - export REACT_APP_ID
-      - export REACT_APP_SECRET
-      - export REACT_APP_domain
-      - echo $REACT_APP_domain $REACT_APP_ID
+      # - export REACT_APP_ID
+      # - export REACT_APP_SECRET
+      # - export REACT_APP_domain
+      # - echo $REACT_APP_domain $REACT_APP_ID
 
   build:
     commands:

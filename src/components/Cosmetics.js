@@ -4,49 +4,49 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {DOMAIN} from '../set'
 
-export default function Student() {
+export default function Cosmetic() {
     const[name,setName]=React.useState('')
     const[address,setAddress]=React.useState('')
     const [imageURL, setImageURL] = React.useState(null);
-    const[students,setStudents]=React.useState([])
+    const[cosmetic,setCosmetic]=React.useState([])
 
     const handleClick=(e)=>{
       e.preventDefault()
-      const student={name,address,imageURL}
-      console.log(student)
-      addStudent(student);
+      const cosmetic={name,address,imageURL}
+      console.log(cosmetic)
+      addcosmetic(cosmetic);
     };
 
-    const addStudent = (student) => {
-      // fetch(`http://${process.env.REACT_APP_domain}/student/add`,{
-      fetch(`https://${DOMAIN}/student/add`,{
+    const addcosmetic = (cosmetic) => {
+      // fetch(`http://${process.env.REACT_APP_domain}/cosmetic/add`,{
+      fetch(`https://${DOMAIN}/cosmetic/add`,{
           method: "POST",
           headers:{"Content-Type":"application/json"},
-          body:JSON.stringify(student)
+          body:JSON.stringify(cosmetic)
       })
       .then(()=>{
-        console.log("New Student Added")
-        fetchStudents();
+        console.log("New cosmetic Added")
+        fetchcosmetics();
       })
       .catch(error => {
-        console.error('Error adding student:', error);
+        console.error('Error adding cosmetic:', error);
       });
     };
 
-    const fetchStudents = () => {
-      // fetch(`http://${process.env.REACT_APP_domain}/student/getAll`)
-      fetch(`https://${DOMAIN}/student/getAll`)
+    const fetchcosmetics = () => {
+      // fetch(`http://${process.env.REACT_APP_domain}/cosmetic/getAll`)
+      fetch(`https://${DOMAIN}/cosmetic/getAll`)
       .then(res=>res.json())
       .then((result)=>{
-        setStudents(result);
+        setcosmetics(result);
       })
       .catch(error => {
-        console.error('Error fetching students:', error);
+        console.error('Error fetching cosmetics:', error);
       });
     };
 
     React.useEffect(()=>{
-        fetchStudents();
+        fetchcosmetics();
     },[])
 
   return (
@@ -58,10 +58,10 @@ export default function Student() {
       noValidate
       autoComplete="off"
     >
-      <h1 style={{color:"blue"}}><u>Add Student</u></h1>
+      <h1 style={{color:"blue"}}><u>Add cosmetic</u></h1>
       <TextField 
       id="standard-basic" 
-      label="Student Name" 
+      label="cosmetic Name" 
       variant="standard" 
       fullWidth 
       value={name}
@@ -70,7 +70,7 @@ export default function Student() {
       />
       <TextField 
       id="standard-basic" 
-      label="Student Address" 
+      label="cosmetic Address" 
       variant="standard" 
       fullWidth 
       value={address}
@@ -86,14 +86,14 @@ export default function Student() {
       />
       <Button variant="contained" onClick={handleClick}>Submit</Button>
       
-      <h1> Students</h1>
+      <h1> cosmetics</h1>
 
-      {students.map(student=>(
-        <h5 key={student.id}>
-        Id:{student.id}<br/>
-        Name:{student.name}<br/>
-        Address:{student.address}<br/>
-        {student.imageURL && <img src={student.imageURL} alt="Student" style={{ maxWidth: '200px', maxHeight: '200px' }} />}
+      {cosmetics.map(cosmetic=>(
+        <h5 key={cosmetic.id}>
+        Id:{cosmetic.id}<br/>
+        Name:{cosmetic.name}<br/>
+        Address:{cosmetic.address}<br/>
+        {cosmetic.imageURL && <img src={cosmetic.imageURL} alt="cosmetic" style={{ maxWidth: '200px', maxHeight: '200px' }} />}
         </h5>
       ))}
     </Box>
