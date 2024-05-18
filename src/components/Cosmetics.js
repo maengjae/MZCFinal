@@ -8,16 +8,16 @@ export default function Cosmetic() {
     const[name,setName]=React.useState('')
     const[address,setAddress]=React.useState('')
     const [imageURL, setImageURL] = React.useState(null);
-    const[cosmetic,setCosmetic]=React.useState([])
+    const[students,setCosmetics]=React.useState([])
 
     const handleClick=(e)=>{
       e.preventDefault()
       const cosmetic={name,address,imageURL}
       console.log(cosmetic)
-      addcosmetic(cosmetic);
+      addCosmetic(cosmetic);
     };
 
-    const addcosmetic = (cosmetic) => {
+    const addCosmetic = (cosmetic) => {
       // fetch(`http://${process.env.REACT_APP_domain}/cosmetic/add`,{
       fetch(`https://${DOMAIN}/cosmetic/add`,{
           method: "POST",
@@ -25,20 +25,20 @@ export default function Cosmetic() {
           body:JSON.stringify(cosmetic)
       })
       .then(()=>{
-        console.log("New cosmetic Added")
-        fetchcosmetics();
+        console.log("New Cosmetic Added")
+        fetchCosmetics();
       })
       .catch(error => {
         console.error('Error adding cosmetic:', error);
       });
     };
 
-    const fetchcosmetics = () => {
+    const fetchCosmetics = () => {
       // fetch(`http://${process.env.REACT_APP_domain}/cosmetic/getAll`)
       fetch(`https://${DOMAIN}/cosmetic/getAll`)
       .then(res=>res.json())
       .then((result)=>{
-        setcosmetics(result);
+        setCosmetics(result);
       })
       .catch(error => {
         console.error('Error fetching cosmetics:', error);
@@ -46,7 +46,7 @@ export default function Cosmetic() {
     };
 
     React.useEffect(()=>{
-        fetchcosmetics();
+        fetchCosmetics();
     },[])
 
   return (
@@ -58,10 +58,10 @@ export default function Cosmetic() {
       noValidate
       autoComplete="off"
     >
-      <h1 style={{color:"blue"}}><u>Add cosmetic</u></h1>
+      <h1 style={{color:"blue"}}><u>Add Cosmetic</u></h1>
       <TextField 
       id="standard-basic" 
-      label="cosmetic Name" 
+      label="Cosmetic Name" 
       variant="standard" 
       fullWidth 
       value={name}
@@ -70,7 +70,7 @@ export default function Cosmetic() {
       />
       <TextField 
       id="standard-basic" 
-      label="cosmetic Address" 
+      label="Student Address" 
       variant="standard" 
       fullWidth 
       value={address}
@@ -86,14 +86,14 @@ export default function Cosmetic() {
       />
       <Button variant="contained" onClick={handleClick}>Submit</Button>
       
-      <h1> cosmetics</h1>
+      <h1> Students</h1>
 
-      {cosmetics.map(cosmetic=>(
+      {students.map(cosmetic=>(
         <h5 key={cosmetic.id}>
         Id:{cosmetic.id}<br/>
         Name:{cosmetic.name}<br/>
         Address:{cosmetic.address}<br/>
-        {cosmetic.imageURL && <img src={cosmetic.imageURL} alt="cosmetic" style={{ maxWidth: '200px', maxHeight: '200px' }} />}
+        {cosmetic.imageURL && <img src={cosmetic.imageURL} alt="Cosmetic" style={{ maxWidth: '200px', maxHeight: '200px' }} />}
         </h5>
       ))}
     </Box>
