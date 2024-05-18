@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import {DOMAIN} from '../set'
 
 export default function Student() {
     const[name,setName]=React.useState('')
@@ -17,8 +18,8 @@ export default function Student() {
     };
 
     const addStudent = (student) => {
-      fetch(`http://${process.env.REACT_APP_domain}/student/add`,{
-      // fetch(`https://${DOMAIN}/student/add`,{
+      // fetch(`http://${process.env.REACT_APP_domain}/student/add`,{
+      fetch(`https://${DOMAIN}/student/add`,{
           method: "POST",
           headers:{"Content-Type":"application/json"},
           body:JSON.stringify(student)
@@ -33,8 +34,8 @@ export default function Student() {
     };
 
     const fetchStudents = () => {
-      fetch(`http://${process.env.REACT_APP_domain}/student/getAll`)
-      // fetch(`https://${DOMAIN}/student/getAll`)
+      // fetch(`http://${process.env.REACT_APP_domain}/student/getAll`)
+      fetch(`https://${DOMAIN}/student/getAll`)
       .then(res=>res.json())
       .then((result)=>{
         setStudents(result);
