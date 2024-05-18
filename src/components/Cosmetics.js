@@ -2,13 +2,19 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
 import {DOMAIN} from '../set'
 
 export default function Cosmetic() {
     const[name,setName]=React.useState('')
     const[address,setAddress]=React.useState('')
     const [imageURL, setImageURL] = React.useState(null);
-    const[students,setCosmetics]=React.useState([])
+    const[cosmetics,setCosmetics]=React.useState([])
 
     const handleClick=(e)=>{
       e.preventDefault()
@@ -49,53 +55,82 @@ export default function Cosmetic() {
         fetchCosmetics();
     },[])
 
-  return (
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <h1 style={{color:"blue"}}><u>Add Cosmetic</u></h1>
-      <TextField 
-      id="standard-basic" 
-      label="Cosmetic Name" 
-      variant="standard" 
-      fullWidth 
-      value={name}
-      onChange={(e)=>setName(e.target.value)}
-      required
-      />
-      <TextField 
-      id="standard-basic" 
-      label="Student Address" 
-      variant="standard" 
-      fullWidth 
-      value={address}
-      onChange={(e)=>setAddress(e.target.value)}
-      />
-      <TextField 
-      id="standard-basic" 
-      label="Image URL" 
-      variant="standard" 
-      fullWidth 
-      value={imageURL}
-      onChange={(e)=>setImageURL(e.target.value)}
-      />
-      <Button variant="contained" onClick={handleClick}>Submit</Button>
-      
-      <h1> Students</h1>
+    return (
+      <Container maxWidth="md">
+          <Box
+              component="form"
+              sx={{
+                  '& > :not(style)': { m: 1, width: '100%' },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+              }}
+              noValidate
+              autoComplete="off"
+              onSubmit={handleClick}
+          >
+              <Typography variant="h4" component="h1" color="primary" gutterBottom>
+                  <u>Add Cosmetic</u>
+              </Typography>
+              <TextField
+                  id="cosmetic-name"
+                  label="Cosmetic Name"
+                  variant="outlined"
+                  fullWidth
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+              />
+              <TextField
+                  id="cosmetic-address"
+                  label="Cosmetic Address"
+                  variant="outlined"
+                  fullWidth
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+              />
+              <TextField
+                  id="cosmetic-image-url"
+                  label="Image URL"
+                  variant="outlined"
+                  fullWidth
+                  value={imageURL}
+                  onChange={(e) => setImageURL(e.target.value)}
+              />
+              <Button variant="contained" color="primary" type="submit">Submit</Button>
+          </Box>
 
-      {students.map(cosmetic=>(
-        <h5 key={cosmetic.id}>
-        Id:{cosmetic.id}<br/>
-        Name:{cosmetic.name}<br/>
-        Address:{cosmetic.address}<br/>
-        {cosmetic.imageURL && <img src={cosmetic.imageURL} alt="Cosmetic" style={{ maxWidth: '200px', maxHeight: '200px' }} />}
-        </h5>
-      ))}
-    </Box>
+          <Typography variant="h4" component="h2" color="primary" gutterBottom sx={{ mt: 4 }}>
+              Cosmetics
+          </Typography>
+
+          <Grid container spacing={4}>
+              {cosmetics.map(cosmetic => (
+                  <Grid item key={cosmetic.id} xs={12} sm={6} md={4}>
+                      <Card>
+                          {cosmetic.imageURL && (
+                              <CardMedia
+                                  component="img"
+                                  height="200"
+                                  image={cosmetic.imageURL}
+                                  alt="Cosmetic"
+                              />
+                          )}
+                          <CardContent>
+                              <Typography variant="h6" component="h3">
+                                  Id: {cosmetic.id}
+                              </Typography>
+                              <Typography variant="body1">
+                                  Name: {cosmetic.name}
+                              </Typography>
+                              <Typography variant="body1">
+                                  Address: {cosmetic.address}
+                              </Typography>
+                          </CardContent>
+                      </Card>
+                  </Grid>
+              ))}
+          </Grid>
+      </Container>
   );
 }
