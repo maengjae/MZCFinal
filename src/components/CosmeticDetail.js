@@ -8,7 +8,7 @@ export default function CosmeticDetail() {
   const [cosmetic, setCosmetic] = useState(null);
 
   useEffect(() => {
-    fetch(`http://${process.env.REACT_APP_domain}/cosmetic/${id}`)
+    fetch(`https://${process.env.REACT_APP_domain}/cosmetic/${id}`)
     // fetch(`https://${DOMAIN}/cosmetic/${id}`)
       .then(response => response.json())
       .then(data => setCosmetic(data))
