@@ -29,4 +29,4 @@ phases:
   post_build:
     commands:
       - echo "Updating files in the S3 bucket..."
-      - aws s3 sync build/ s3://mjy-static-test-deploy --delete --exclude "images/*"
+      - aws s3 sync build/ s3://mjy-static-deploy --delete --exclude "images/*"
