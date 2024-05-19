@@ -8,7 +8,7 @@ phases:
       - echo "Installing dependencies..."
       - npm install
       - npm install react-scripts@5.0.1
-      - npm install --save react-aws-s3
+      - npm install react-router-dom
     
   pre_build:
     commands:
@@ -29,4 +29,4 @@ phases:
   post_build:
     commands:
       - echo "Updating files in the S3 bucket..."
-      - aws s3 sync build/ s3://mjy-static-deploy --delete --exclude "images/*"
+      - aws s3 sync build/ s3://mjy-static-test-deploy --delete --exclude "images/*"

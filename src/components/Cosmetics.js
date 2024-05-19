@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -109,12 +110,14 @@ export default function Cosmetic() {
                   <Grid item key={cosmetic.id} xs={12} sm={6} md={4}>
                       <Card>
                           {cosmetic.imageURL && (
+                            <Link to={`/cosmetic/${cosmetic.id}`}>
                               <CardMedia
                                   component="img"
                                   height="200"
                                   image={cosmetic.imageURL}
                                   alt="Cosmetic"
                               />
+                            </Link>
                           )}
                           <CardContent>
                               <Typography variant="h6" component="h3">
