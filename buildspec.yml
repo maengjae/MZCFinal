@@ -18,7 +18,7 @@ phases:
       # - REACT_APP_domain=$(aws elbv2 describe-load-balancers --names mjy-app-alb --query "LoadBalancers[0].DNSName" --output text)
       # - export REACT_APP_ID
       # - export REACT_APP_SECRET
-      # - export REACT_APP_domain
+      - export REACT_APP_domain
       # - echo $REACT_APP_domain $REACT_APP_ID
 
   build:
