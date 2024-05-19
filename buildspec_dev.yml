@@ -18,6 +18,9 @@ phases:
       - docker_username=$(echo "$secret" | jq -r '.username')
       - docker_password=$(echo "$secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
+      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mjy-dev-instance" --query "Reservations[0].Instances[0].InstanceId" --output text)
+      - EC2_INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+      - ssh -o StrictHostKeyChecking=no ec2-user@$EC2_INSTANCE_IP "echo Logged in"
 
   build:
     commands:
@@ -32,9 +35,6 @@ phases:
       - echo Build completed on `date`
       - echo pushing to repo
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-
-      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mjy-dev-instance" --query "Reservations[0].Instances[0].InstanceId" --output text)
-      - EC2_INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
 
       - echo Deploying to EC2 instance
       - ssh ec2-user@$EC2_INSTANCE_IP "docker pull $REPOSITORY_URI:$IMAGE_TAG"
