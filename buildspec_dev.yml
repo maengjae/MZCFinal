@@ -12,7 +12,7 @@ phases:
     
   pre_build:
     commands:
-      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=YOUR_INSTANCE_NAME" --query "Reservations[0].Instances[0].InstanceId" --output text)
+      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mjy-dev-instance" --query "Reservations[0].Instances[0].InstanceId" --output text)
       - REACT_APP_domain=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicDnsName" --output text)
       - export REACT_APP_domain
 
