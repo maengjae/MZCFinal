@@ -5,7 +5,7 @@ env:
     AWS_REGION: "us-east-2"
     REPOSITORY_URI: "lygerin14/test"
     IMAGE_TAG: "app-deploy"
-    TASK_FAMILY: "app-task-family"
+    INSTANCE_NAME: "mjy-dev-instance"
 
 phases:
   pre_build:
@@ -18,9 +18,9 @@ phases:
       - docker_username=$(echo "$secret" | jq -r '.username')
       - docker_password=$(echo "$secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
-      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mjy-dev-instance" --query "Reservations[0].Instances[0].InstanceId" --output text)
+      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$INSTANCE_NAME" --query "Reservations[0].Instances[0].InstanceId" --output text)
       - EC2_INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
-      - ssh -o StrictHostKeyChecking=no ec2-user@$EC2_INSTANCE_IP "echo Logged in"
+      - ssh-keyscan -H $EC2_INSTANCE_IP >> ~/.ssh/known_hosts
 
   build:
     commands:
