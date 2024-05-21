@@ -21,8 +21,8 @@ phases:
       - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$INSTANCE_NAME" --query "Reservations[0].Instances[0].InstanceId" --output text)
       - EC2_INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
       - access_key=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
-      - echo $secret_key
-      - secret_key=$(echo "$access_key" | tr -d '\r' | jq -r '.key_content')
+      - echo $access_key
+      - secret_key=$(echo "$access_key" | jq -r '.key_content')
       - echo $secret_key
       - echo "${secret_key}" > /tmp/private-key.pem  # Replace this with secure retrieval method
       - chmod 600 /tmp/private-key.pem
