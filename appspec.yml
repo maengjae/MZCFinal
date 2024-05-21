@@ -1,0 +1,9 @@
+version: 0.0
+os: linux
+files:
+  - source: scripts/
+    destination: /scripts/
+hooks:
+  ApplicationStart:
+    - location: scripts/application_start.sh
+      runas: root

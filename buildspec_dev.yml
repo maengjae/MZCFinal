@@ -16,7 +16,6 @@ phases:
       - docker_username=$(echo "$docker_secret" | jq -r '.username')
       - docker_password=$(echo "$docker_secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
-      - export db_endpoint
 
   build:
     commands:
@@ -25,9 +24,9 @@ phases:
       - mvn clean package -DskipTests
       - echo Building the Docker image...
       - docker build -t -e db_endpoint=DB_ENDPOINT $REPOSITORY_URI:$IMAGE_TAG .
+      - echo pushing to repo
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
 
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo pushing to repo
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
