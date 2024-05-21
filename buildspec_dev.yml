@@ -22,9 +22,10 @@ phases:
       - EC2_INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
       - access_key=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
       - secret_key=$(echo "$access_key" | jq -r '.key_content')
-      - ssh-keyscan -H $EC2_INSTANCE_IP >> ~/.ssh/known_hosts
+      - echo $secret_key
       - echo "${secret_key}" > /tmp/private-key.pem  # Replace this with secure retrieval method
       - chmod 600 /tmp/private-key.pem
+      - ssh-keyscan -H $EC2_INSTANCE_IP >> ~/.ssh/known_hosts
       - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "echo login"
 
 
