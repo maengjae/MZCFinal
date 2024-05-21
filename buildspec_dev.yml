@@ -14,13 +14,17 @@ phases:
       # - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382777416.dkr.ecr.us-east-2.amazonaws.com
       # - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
       - echo Logging into docker
-      - secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query SecretString --output text)
-      - docker_username=$(echo "$secret" | jq -r '.username')
-      - docker_password=$(echo "$secret" | jq -r '.password')
+      - docker-secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query SecretString --output text)
+      - docker_username=$(echo "$docker-secret" | jq -r '.username')
+      - docker_password=$(echo "$docker-secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
       - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$INSTANCE_NAME" --query "Reservations[0].Instances[0].InstanceId" --output text)
       - EC2_INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+      - access-key=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
+      - secret-key=$(echo "$access-key" | jq -r '.key-content')
       - ssh-keyscan -H $EC2_INSTANCE_IP >> ~/.ssh/known_hosts
+      - echo "${secret-key}" > /tmp/private-key.pem  # Replace this with secure retrieval method
+      - chmod 600 /tmp/private-key.pem
 
   build:
     commands:
@@ -37,7 +41,7 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
 
       - echo Deploying to EC2 instance
-      - ssh ec2-user@$EC2_INSTANCE_IP "docker pull $REPOSITORY_URI:$IMAGE_TAG"
-      - ssh ec2-user@$EC2_INSTANCE_IP "docker stop $REPOSITORY_URI:$IMAGE_TAG || true"
-      - ssh ec2-user@$EC2_INSTANCE_IP "docker rm $REPOSITORY_URI:$IMAGE_TAG || true"
-      - ssh ec2-user@$EC2_INSTANCE_IP "docker run -d --name $REPOSITORY_URI:$IMAGE_TAG -p 8080:8080 $REPOSITORY_URI:$IMAGE_TAG"
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "docker pull $REPOSITORY_URI:$IMAGE_TAG"
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "docker stop \$(docker ps -q --filter ancestor=$REPOSITORY_URI:$IMAGE_TAG) || true"
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "docker rm \$(docker ps -a -q --filter ancestor=$REPOSITORY_URI:$IMAGE_TAG) || true"
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "docker run -d --name ${IMAGE_TAG}_container -p 8080:8080 $REPOSITORY_URI:$IMAGE_TAG"
