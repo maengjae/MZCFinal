@@ -4,6 +4,7 @@ env:
   variables:
     REPOSITORY_URI: "lygerin14/test"
     IMAGE_TAG: "app-deploy"
+    CLUSTER_IDENTIFIER: "mjy-dev-aurora-cluster"
 
 phases:
   pre_build:
@@ -16,6 +17,7 @@ phases:
       - docker_username=$(echo "$docker_secret" | jq -r '.username')
       - docker_password=$(echo "$docker_secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
+      - export DB_ENDPOINT=$(aws rds describe-db-clusters --db-cluster-identifier $CLUSTER_IDENTIFIER --query "DBClusters[0].Endpoint" --output text)
 
   build:
     commands:
@@ -23,7 +25,7 @@ phases:
       - echo building the Jar file
       - mvn clean package -DskipTests
       - echo Building the Docker image...
-      - docker build -t -e db_endpoint=DB_ENDPOINT $REPOSITORY_URI:$IMAGE_TAG .
+      - docker build -e db_endpoint=$DB_ENDPOINT -t $REPOSITORY_URI:$IMAGE_TAG .
       - echo pushing to repo
       - docker push $REPOSITORY_URI:$IMAGE_TAG
 
