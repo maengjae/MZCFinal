@@ -24,7 +24,7 @@ phases:
       - echo building the Jar file
       - mvn clean package -DskipTests
       - echo Building the Docker image...
-      - docker build-t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
       - echo pushing to repo
       - docker push $REPOSITORY_URI:$IMAGE_TAG
 
