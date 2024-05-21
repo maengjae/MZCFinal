@@ -2,10 +2,8 @@ version: 0.2
 
 env:
   variables:
-    AWS_REGION: "us-east-2"
     REPOSITORY_URI: "lygerin14/test"
     IMAGE_TAG: "app-deploy"
-    INSTANCE_NAME: "mjy-dev-instance"
 
 phases:
   pre_build:
@@ -18,17 +16,7 @@ phases:
       - docker_username=$(echo "$docker_secret" | jq -r '.username')
       - docker_password=$(echo "$docker_secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
-      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$INSTANCE_NAME" --query "Reservations[0].Instances[0].InstanceId" --output text)
-      - EC2_INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
-      - access_key=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
-      - echo $access_key
-      - secret_key=$(echo "$access_key" | jq -r '.key_content')
-      - echo $secret_key
-      - echo "${secret_key}" > /tmp/private-key.pem  # Replace this with secure retrieval method
-      - chmod 600 /tmp/private-key.pem
-      - ssh-keyscan -H $EC2_INSTANCE_IP >> ~/.ssh/known_hosts
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "echo login"
-
+      - export db_endpoint
 
   build:
     commands:
@@ -36,16 +24,10 @@ phases:
       - echo building the Jar file
       - mvn clean package -DskipTests
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker build -t -e db_endpoint=DB_ENDPOINT $REPOSITORY_URI:$IMAGE_TAG .
 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo pushing to repo
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-
-      - echo Deploying to EC2 instance
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "sudo docker pull $REPOSITORY_URI:$IMAGE_TAG"
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "sudo docker stop \$(docker ps -q --filter ancestor=$REPOSITORY_URI:$IMAGE_TAG) || true"
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "sudo docker rm \$(docker ps -a -q --filter ancestor=$REPOSITORY_URI:$IMAGE_TAG) || true"
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "sudo docker run -d --name ${IMAGE_TAG}_container -p 8080:8080 $REPOSITORY_URI:$IMAGE_TAG"
