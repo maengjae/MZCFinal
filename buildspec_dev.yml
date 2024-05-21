@@ -25,6 +25,8 @@ phases:
       - ssh-keyscan -H $EC2_INSTANCE_IP >> ~/.ssh/known_hosts
       - echo "${secret_key}" > /tmp/private-key.pem  # Replace this with secure retrieval method
       - chmod 600 /tmp/private-key.pem
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "echo login"
+
 
   build:
     commands:
@@ -41,7 +43,7 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
 
       - echo Deploying to EC2 instance
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "docker pull $REPOSITORY_URI:$IMAGE_TAG"
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "docker stop \$(docker ps -q --filter ancestor=$REPOSITORY_URI:$IMAGE_TAG) || true"
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "docker rm \$(docker ps -a -q --filter ancestor=$REPOSITORY_URI:$IMAGE_TAG) || true"
-      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "docker run -d --name ${IMAGE_TAG}_container -p 8080:8080 $REPOSITORY_URI:$IMAGE_TAG"
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "sudo docker pull $REPOSITORY_URI:$IMAGE_TAG"
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "sudo docker stop \$(docker ps -q --filter ancestor=$REPOSITORY_URI:$IMAGE_TAG) || true"
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "sudo docker rm \$(docker ps -a -q --filter ancestor=$REPOSITORY_URI:$IMAGE_TAG) || true"
+      - ssh -i /tmp/private-key.pem ec2-user@$EC2_INSTANCE_IP "sudo docker run -d --name ${IMAGE_TAG}_container -p 8080:8080 $REPOSITORY_URI:$IMAGE_TAG"
