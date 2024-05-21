@@ -14,16 +14,16 @@ phases:
       # - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382777416.dkr.ecr.us-east-2.amazonaws.com
       # - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
       - echo Logging into docker
-      - docker-secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query SecretString --output text)
-      - docker_username=$(echo "$docker-secret" | jq -r '.username')
-      - docker_password=$(echo "$docker-secret" | jq -r '.password')
+      - docker_secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query SecretString --output text)
+      - docker_username=$(echo "$docker_secret" | jq -r '.username')
+      - docker_password=$(echo "$docker_secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
       - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$INSTANCE_NAME" --query "Reservations[0].Instances[0].InstanceId" --output text)
       - EC2_INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
-      - access-key=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
-      - secret-key=$(echo "$access-key" | jq -r '.key-content')
+      - access_key=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/mjy-key --query SecretString --output text)
+      - secret_key=$(echo "$access_key" | jq -r '.key-content')
       - ssh-keyscan -H $EC2_INSTANCE_IP >> ~/.ssh/known_hosts
-      - echo "${secret-key}" > /tmp/private-key.pem  # Replace this with secure retrieval method
+      - echo "${secret_key}" > /tmp/private-key.pem  # Replace this with secure retrieval method
       - chmod 600 /tmp/private-key.pem
 
   build:
