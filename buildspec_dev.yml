@@ -30,7 +30,8 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo '{"imageTag": "app-deploy", "imageURI": lygerin14/test:app-deploy"}' > imageDetail.json
+      - >
+        echo '{"imageTag": "${IMAGE_TAG}", "imageURI": "${REPOSITORY_NAME}:${IMAGE_TAG}"}' > imageDetail.json
 
 artifacts:
   files:
