@@ -16,9 +16,8 @@ phases:
       - docker_username=$(echo "$docker_secret" | jq -r '.username')
       - docker_password=$(echo "$docker_secret" | jq -r '.password')
       - echo $docker_password | docker login -u $docker_username --password-stdin
-      - echo Fetching key pair from S3 bucket...
       - aws s3 cp s3://mjy-bucket/key/mjy-key-pair.pem .
-      - cat mjy-key-pair.pem
+      - chmod 400 mjy-key-pair.pem
       - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mjy-dev-instance" --query "Reservations[0].Instances[0].InstanceId" --output text)
       - INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
       - ssh-keyscan -H $INSTANCE_PUBLIC_IP >> ~/.ssh/known_hosts
