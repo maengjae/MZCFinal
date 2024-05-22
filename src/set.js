@@ -7,4 +7,4 @@
 //     s3Url: 'https://mjy-static-deploy.s3.us-east-2.amazonaws.com/'
 // }
 
-export const DOMAIN = "back.jaejae.store"
+// export const DOMAIN = "back.jaejae.store"

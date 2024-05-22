@@ -25,7 +25,7 @@ export default function Cosmetic() {
     };
 
     const addCosmetic = (cosmetic) => {
-      fetch(`https://${process.env.REACT_APP_domain}/cosmetic/add`,{
+      fetch(`${process.env.REACT_APP_domain}/cosmetic/add`,{
     //   fetch(`https://${DOMAIN}/cosmetic/add`,{
           method: "POST",
           headers:{"Content-Type":"application/json"},
@@ -41,7 +41,7 @@ export default function Cosmetic() {
     };
 
     const fetchCosmetics = () => {
-      fetch(`https://${process.env.REACT_APP_domain}/cosmetic/getAll`)
+      fetch(`${process.env.REACT_APP_domain}/cosmetic/getAll`)
     //   fetch(`https://${DOMAIN}/cosmetic/getAll`)
       .then(res=>res.json())
       .then((result)=>{
