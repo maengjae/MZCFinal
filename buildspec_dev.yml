@@ -39,4 +39,4 @@ phases:
       - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker rm mjy-app || true"
       - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "echo $docker_password | sudo docker login -u $docker_username --password-stdin"
       - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker pull $REPOSITORY_URI:$IMAGE_TAG"
-      - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker run -d -p 8080:8080 --name mjy-app -e db_endpoint=$DB_ENDPOINT $REPOSITORY_URI:$IMAGE_TAG"
+      - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker run -d -p 8080:8080 --name mjy-app -e db_endpoint=\$(echo \$DB_ENDPOINT) $REPOSITORY_URI:$IMAGE_TAG"
