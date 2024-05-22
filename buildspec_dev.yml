@@ -43,7 +43,7 @@ phases:
       - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker run -d -p 8080:8080 --name mjy-app -e db_endpoint=$DB_ENDPOINT $REPOSITORY_URI:$IMAGE_TAG"
       - >
         echo '{"imageTag": "$IMAGE_TAG", "imageURI": "$REPOSITORY_URI:$IMAGE_TAG"}' > imageDefinition.json
-        
-  artifacts:
-    files:
-      - imageDefinition.json
+
+artifacts:
+  files:
+    - imageDefinition.json
