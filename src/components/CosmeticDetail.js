@@ -6,6 +6,11 @@ import { Container, Typography, Box } from '@mui/material';
 export default function CosmeticDetail() {
   const { id } = useParams();
   const [cosmetic, setCosmetic] = useState(null);
+  const baseURL = "https://jaejae.store/";
+
+  const getImageURL = (path) => {
+    return baseURL+path;
+  }
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_domain}/cosmetic/${id}`)
@@ -14,6 +19,7 @@ export default function CosmeticDetail() {
       .then(data => setCosmetic(data))
       .catch(error => console.error('Error fetching cosmetic:', error));
   }, [id]);
+
 
   if (!cosmetic) {
     return <Typography>Loading...</Typography>;
@@ -25,7 +31,7 @@ export default function CosmeticDetail() {
         <Typography variant="h3" component="h1" color="primary" gutterBottom>
           {cosmetic.name}
         </Typography>
-        <img src={cosmetic.imageURL} alt={cosmetic.name} style={{ maxWidth: '100%', height: 'auto' }} />
+        <img src={getImageURL(cosmetic.imageURL)} alt={cosmetic.name} style={{ maxWidth: '100%', height: 'auto' }} />
         <Typography variant="h5" component="h2" color="textSecondary" gutterBottom>
           Address: {cosmetic.address}
         </Typography>
