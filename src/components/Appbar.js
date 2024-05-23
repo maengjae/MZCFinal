@@ -5,8 +5,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import Button from '@mui/material/Button';
+import { Link as RouterLink } from 'react-router-dom';
 
-export default function Appbar() {
+export default function Appbar({ username }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -23,6 +25,28 @@ export default function Appbar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             MJY online cosmetic shop complete
           </Typography>
+          {username ? (
+            <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
+              {username}
+            </Typography>
+          ) : (
+            <>
+              <Button
+                component={RouterLink}
+                to="/login"
+                color="inherit"
+              >
+                Login
+              </Button>
+              <Button
+                component={RouterLink}
+                to="/register"
+                color="inherit"
+              >
+                Register
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

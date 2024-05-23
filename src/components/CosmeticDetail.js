@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { DOMAIN } from '../set';
 import { Container, Typography, Box } from '@mui/material';
 
 export default function CosmeticDetail() {
