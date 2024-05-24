@@ -1,5 +1,9 @@
 package com.springtest.springtest.controller;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,12 +34,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user) {
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody User user) {
         User authenticatedUser = userService.loginUser(user.getUsername(), user.getPassword());
         if (authenticatedUser != null) {
-            return ResponseEntity.ok("Login successful");
+            // Generate a token or any other mechanism for session management
+            String token = "some-generated-token"; // Replace with actual token generation logic
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("token", token);
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(401).body("Invalid username or password");
+            return ResponseEntity.status(401).body(Collections.singletonMap("message", "Invalid username or password"));
         }
     }
 }
