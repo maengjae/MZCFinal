@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -15,6 +15,7 @@ export default function Cosmetic() {
     const[address,setAddress]=React.useState('')
     const [imageURL, setImageURL] = React.useState(null);
     const[cosmetics,setCosmetics]=React.useState([])
+    const {username} = useParams();
 
     const handleClick=(e)=>{
       e.preventDefault()
@@ -109,7 +110,7 @@ export default function Cosmetic() {
                   <Grid item key={cosmetic.id} xs={12} sm={6} md={4}>
                       <Card>
                           {cosmetic.imageURL && (
-                            <Link to={`/cosmetic/${cosmetic.id}`}>
+                            <Link to={`/${username}/cosmetic/${cosmetic.id}`}>
                               <CardMedia
                                   component="img"
                                   height="200"

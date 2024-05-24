@@ -20,26 +20,22 @@ export default function Login({ setUsername }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }), // Send username and password to the backend
+        body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log('Login successful', data);
-        // Store the session token and username
         localStorage.setItem('token', data.token);
         localStorage.setItem('username', username);
-        setUsername(username); // Update the state in the App component
-        // Redirect the user to the dashboard or any other page
-        navigate('/'); // Assuming you have a dashboard route
+        setUsername(username); // Update the username state in App
+        navigate(`/${username}`);
       } else {
         const errorData = await response.json();
         console.error('Login failed:', errorData.message);
-        // Handle login failure (e.g., display error message to the user)
       }
     } catch (error) {
       console.error('Error logging in:', error);
-      // Handle network errors or other exceptions
     }
   };
 

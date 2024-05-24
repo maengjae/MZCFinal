@@ -14,7 +14,8 @@ export default function Register() {
     const username = formData.get('username');
     const password = formData.get('password');
     const confirmPassword = formData.get('confirmPassword');
-
+    console.log(JSON.stringify({ username, password }), // Send username and password to the backend
+)
     if (password !== confirmPassword) {
         console.error('Passwords do not match');
         return;

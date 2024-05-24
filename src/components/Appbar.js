@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import { Link as RouterLink } from 'react-router-dom';
 
-export default function Appbar({ username }) {
+export default function Appbar({ username, handleLogout }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -26,9 +26,14 @@ export default function Appbar({ username }) {
             MJY online cosmetic shop complete
           </Typography>
           {username ? (
-            <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
-              {username}
-            </Typography>
+            <>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 0, mr: 2 }}>
+                {username}
+              </Typography>
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
           ) : (
             <>
               <Button
