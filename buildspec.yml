@@ -8,9 +8,6 @@ env:
 phases:
   pre_build:
     commands:
-      # - echo Logging in to Amazon ECR....
-      # - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382777416.dkr.ecr.us-east-2.amazonaws.com
-      # - REPOSITORY_URI=992382777416.dkr.ecr.us-east-2.amazonaws.com/mjy-app
       - echo Logging into docker
       - docker_secret=$(aws secretsmanager get-secret-value --secret-id /CodeBuild/docker --query SecretString --output text)
       - docker_username=$(echo "$docker_secret" | jq -r '.username')
@@ -18,10 +15,11 @@ phases:
       - echo $docker_password | docker login -u $docker_username --password-stdin
       - aws s3 cp s3://mjy-bucket/key/mjy-key-pair.pem .
       - chmod 400 mjy-key-pair.pem
-      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mjy-dev-instance" --query "Reservations[0].Instances[0].InstanceId" --output text)
-      - INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
-      - ssh-keyscan -H $INSTANCE_PUBLIC_IP >> ~/.ssh/known_hosts
-      - DB_ENDPOINT=$(aws rds describe-db-clusters --db-cluster-identifier mjy-dev-aurora-cluster --query 'DBClusters[0].Endpoint')
+      - APP_INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mjy-dev-app-instance" --query "Reservations[0].Instances[0].InstanceId" --output text)
+      - APP_INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $APP_INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+      - ssh-keyscan -H $APP_INSTANCE_PUBLIC_IP >> ~/.ssh/known_hosts
+      - DB_INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mjy-dev-db-instance" --query "Reservations[0].Instances[0].InstanceId" --output text)
+      - DB_ENDPOINT=$(aws ec2 describe-instances --instance-ids $DB_INSTANCE_ID --query "Reservations[0].Instances[0].PrivateIpAddress" --output text)
 
   build:
     commands:
@@ -36,11 +34,11 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker stop mjy-app || true"
-      - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker rm mjy-app || true"
-      - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "echo $docker_password | sudo docker login -u $docker_username --password-stdin"
-      - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker pull $REPOSITORY_URI:$IMAGE_TAG"
-      - ssh -i mjy-key-pair.pem ec2-user@$INSTANCE_PUBLIC_IP "sudo docker run -d -p 8080:8080 --name mjy-app -e db_endpoint=$DB_ENDPOINT $REPOSITORY_URI:$IMAGE_TAG"
+      - ssh -i mjy-key-pair.pem ec2-user@$APP_INSTANCE_PUBLIC_IP "sudo docker stop mjy-app || true"
+      - ssh -i mjy-key-pair.pem ec2-user@$APP_INSTANCE_PUBLIC_IP "sudo docker rm mjy-app || true"
+      - ssh -i mjy-key-pair.pem ec2-user@$APP_INSTANCE_PUBLIC_IP "echo $docker_password | sudo docker login -u $docker_username --password-stdin"
+      - ssh -i mjy-key-pair.pem ec2-user@$APP_INSTANCE_PUBLIC_IP "sudo docker pull $REPOSITORY_URI:$IMAGE_TAG"
+      - ssh -i mjy-key-pair.pem ec2-user@$APP_INSTANCE_PUBLIC_IP "sudo docker run -d -p 8080:8080 --name mjy-app -e db_endpoint=$DB_ENDPOINT $REPOSITORY_URI:$IMAGE_TAG"
       - >
         echo '[{"name": "mjy-app", "imageUri": "lygerin14/test:app-deploy"}]' > imagedefinitions.json
 
