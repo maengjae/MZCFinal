@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, Button } from '@mui/material';
 
 export default function CosmeticDetail() {
-  const { username, id } = useParams();
+  const { id } = useParams();
   const [cosmetic, setCosmetic] = useState(null);
   const navigate = useNavigate();
   const baseURL = "https://jaejae.store/";
@@ -38,7 +38,7 @@ export default function CosmeticDetail() {
         <Typography variant="body1">
           {/* Add any other detailed information here */}
         </Typography>
-        <Button variant="contained" color="primary" onClick={() => navigate(`/${username}`)}>
+        <Button variant="contained" color="primary" onClick={() => navigate("/")}>
           Back to User's Cosmetics
         </Button>
       </Box>

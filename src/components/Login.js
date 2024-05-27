@@ -29,7 +29,7 @@ export default function Login({ setUsername }) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('username', username);
         setUsername(username); // Update the username state in App
-        navigate(`/${username}`);
+        navigate("/");
       } else {
         const errorData = await response.json();
         console.error('Login failed:', errorData.message);

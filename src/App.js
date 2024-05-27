@@ -30,8 +30,8 @@ function App() {
       <div className="App">
         <Appbar username={username} handleLogout={handleLogout}/>
         <Routes>
-          <Route path={`/${username}`} element={<Cosmetic />} />
-          <Route path={`/${username}/cosmetic/:id`} element={<CosmeticDetail />} />
+          <Route path="/" element={<Cosmetic />} />
+          <Route path="/cosmetic/:id" element={<CosmeticDetail />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login setUsername={setUsername} />} />
         </Routes>
