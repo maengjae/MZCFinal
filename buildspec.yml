@@ -41,9 +41,9 @@ phases:
       - ssh -i mjy-key-pair.pem ec2-user@$APP_INSTANCE_PUBLIC_IP "sudo docker pull $REPOSITORY_URI:$IMAGE_TAG"
       - ssh -i mjy-key-pair.pem ec2-user@$APP_INSTANCE_PUBLIC_IP "sudo docker run -d -p 8080:8080 --name mjy-app -e db_endpoint=$DB_ENDPOINT $REPOSITORY_URI:$IMAGE_TAG"
       - >
-        echo '[{"name": "mjy-app", "imageUri": "lygerin14/test:app-deploy"}]' > imagedefinitions.json
+        echo '{"ImageURI": "lygerin14/test:app-deploy"}' > imageDetail.json
       - ssh -i mjy-key-pair.pem ec2-user@$APP_INSTANCE_PUBLIC_IP "history"
 
 artifacts:
   files:
-    - imagedefinitions.json
+    - imageDetail.json
