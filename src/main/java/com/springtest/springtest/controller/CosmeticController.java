@@ -27,7 +27,7 @@ public class CosmeticController {
     @PostMapping("/add")
     public String add(@RequestBody Cosmetic cosmetic) {
         cosmeticService.saveCosmetic(cosmetic);
-        return "New student is added";
+        return "New cosmetic is added";
     }
 
     @GetMapping("/getAll")
