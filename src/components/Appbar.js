@@ -24,7 +24,6 @@ export default function Appbar({ username, handleLogout }) {
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             MJY online cosmetic shop merge test?
-            helo~~~
           </Typography>
           {username ? (
             <>
