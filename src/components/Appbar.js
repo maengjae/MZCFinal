@@ -23,7 +23,7 @@ export default function Appbar({ username, handleLogout }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            MJY online cosmetic shop merge test
+            MJY online cosmetic shop merge test!!!!!!!!!!!!!!!
           </Typography>
           {username ? (
             <>
