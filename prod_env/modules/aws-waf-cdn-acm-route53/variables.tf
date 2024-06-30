@@ -1,0 +1,10 @@
+variable "domain-name" {}
+variable "static-bucket-domain" {}
+variable "origin-id" {}
+variable "target-origin-id" {}
+variable "cdn-name" {}
+variable "web_acl_name" {}
+variable "app-alb-name" {}
+variable "app-alb-zone" {}
+variable "cache_policy_name" {}
+variable "bucket-domain-name" {}
